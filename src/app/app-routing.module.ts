@@ -7,7 +7,7 @@ import { TimesheetComponent}   from './timesheet/timesheet.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'calendar', component: CalendarComponent }
+  { path: 'calendar', component: CalendarComponent },
   { path: 'timesheet', component: TimesheetComponent }
 ];
 

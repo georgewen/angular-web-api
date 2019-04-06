@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { TimeSheet } from '../timesheet';
+import { TimesheetService } from '../timesheet.service';
+import { AlertsService } from '../alerts.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-timesheet',
@@ -7,9 +11,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TimesheetComponent implements OnInit {
 
-  constructor() { }
+  private timesheets: Observable<TimeSheet[]>;
+
+  constructor(private timesheetService: TimesheetService) { }
 
   ngOnInit() {
+    this.timesheets = this.timesheetService.getTimeSheets();
   }
 
 }

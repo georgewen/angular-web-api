@@ -26,12 +26,24 @@ export class TimesheetService {
    getTimeSheets(): Observable<TimeSheet[]> {
     try {
 
+//test code start
+      var accessToken = this.authService.getAccessToken();
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200)
+            alert(this.responseText);
+      }
+      xmlHttp.open("GET", 'https://apps.smecnet.com/ToDoList/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01', true); // true for asynchronous
+      xmlHttp.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+      xmlHttp.send();
+//test code end
+
       var header = {
         headers: new HttpHeaders()
           .set('Authorization',  `Bearer ${this.authService.getAccessToken()}`)
       }      
-      //token = await this.authService.getAccessToken()
-      return this.http.get<TimeSheet[]>(`http://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01`,header)
+      
+      return this.http.get<TimeSheet[]>('https://apps.smecnet.com/ToDoList/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01',header)
     } catch (error) {
       this.alertsService.add('Could not get events', JSON.stringify(error, null, 2));
     }
