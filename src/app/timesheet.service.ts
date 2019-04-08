@@ -23,7 +23,7 @@ export class TimesheetService {
     }
 
     
-    getTimeSheets(): Observable<TimeSheet[]> {
+    getTimeSheets(): Observable<Array<TimeSheet>> {
 
 //       var accessToken: string;
 

@@ -12,12 +12,14 @@ import { BroadcastService, MsalService } from '@azure/msal-angular';
 })
 export class TimesheetComponent implements OnInit {
 
-  private timesheets: Observable<TimeSheet[]>;
+  private timesheets: Array<TimeSheet>;
 
   constructor(private timesheetService: TimesheetService, private broadcastService: BroadcastService, private authService: MsalService) { }
 
   ngOnInit() {
-    this.timesheets = this.timesheetService.getTimeSheets();
+    this.timesheetService.getTimeSheets().subscribe(data => {
+      this.timesheets = data;
+    });
     this.broadcastService.subscribe("msal:acquireTokenSuccess", (payload) => {
     });
 
