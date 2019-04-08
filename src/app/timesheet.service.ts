@@ -9,6 +9,7 @@ import { Event } from './event';
 import { AlertsService } from './alerts.service';
 import { TimeSheet } from './timesheet';
 import { access } from 'fs';
+import { OAuthSettings } from 'src/oauth';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class TimesheetService {
     }
 
     
-    getTimeSheets(): TimeSheet[] {
+    getTimeSheets():TimeSheet[] {
 
       var accessToken: string;
 
@@ -32,8 +33,7 @@ export class TimesheetService {
 
 //test code start
       
-
-    this.authService.getAccessToken().then(data =>
+    this.authService.getAccessToken(OAuthSettings.scopes2).then(data =>
     {
       accessToken = data;
       //alert(accessToken);
@@ -42,24 +42,23 @@ export class TimesheetService {
         if (this.readyState == 4 && this.status == 200)
             alert(this.responseText);
       }
-      xmlHttp.open("GET", 'https://localhost:44301/api/TimeSheets?ResourceID=SA5700558&WeekEnding=2012-05-31', true); // true for asynchronous
+      xmlHttp.open("GET", 'https://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-31', true); // true for asynchronous
       xmlHttp.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-      xmlHttp.send();
+      ///xmlHttp.send();
     //test code end
 
-    });
-
-
-
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  'Bearer ${accessToken}')
+      var header = {headers: new HttpHeaders() 
+              .set('Authorization',  'Bearer ' + accessToken)
       }      
-      
-      //return this.http.get<TimeSheet[]>('https://apps.smecnet.com/ToDoList/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01',header);
-      this.http.get<TimeSheet[]>('https://localhost:44301/api/TimeSheets?ResourceID=SA5700558&WeekEnding=2012-06-01',header).subscribe(data => {
-        return data;
+    
+      //return this.http.get<Array<TimeSheet>>('https://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01',header);
+      this.http.get<TimeSheet[]>('https://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01',header).subscribe(data => {
+        //for (let ts of data) {
+        //  console.log(ts.TimeID); // 1, "string", false
+        //}  
+      return data;
         })
+    });
       return null;
     } catch (error) {
       this.alertsService.add('Could not get events', JSON.stringify(error, null, 2));

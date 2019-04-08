@@ -43,8 +43,8 @@ export class AuthService {
   }
 
   // Silently request an access token
-  async getAccessToken(): Promise<string> {
-    let result = await this.msalService.acquireTokenSilent(OAuthSettings.scopes)
+  async getAccessToken(scopes:string[]): Promise<string> {
+    let result = await this.msalService.acquireTokenSilent(scopes)
       .catch((reason) => {
         this.alertsService.add('Get token failed', JSON.stringify(reason, null, 2));
       });
@@ -60,7 +60,7 @@ export class AuthService {
       // provider that requests the token from the
       // auth service
       authProvider: async(done) => {
-        let token = await this.getAccessToken()
+        let token = await this.getAccessToken(OAuthSettings.scopes)
           .catch((reason) => {
             done(reason, null);
           });

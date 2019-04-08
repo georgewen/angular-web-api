@@ -11,12 +11,15 @@ import { Observable, of } from 'rxjs';
 })
 export class TimesheetComponent implements OnInit {
 
-  private timesheets: Observable<TimeSheet[]>;
+  timesheets: any = [];
 
   constructor(private timesheetService: TimesheetService) { }
 
   ngOnInit() {
-    this.timesheets = this.timesheetService.getTimeSheets();
+    this.getTimeSheets();
   }
+  getTimeSheets() {
+    this.timesheets = this.timesheetService.getTimeSheets();
+  } 
 
 }

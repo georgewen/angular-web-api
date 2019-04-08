@@ -4,6 +4,7 @@ import { Client } from '@microsoft/microsoft-graph-client';
 import { AuthService } from './auth.service';
 import { Event } from './event';
 import { AlertsService } from './alerts.service';
+import { OAuthSettings } from 'src/oauth';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class GraphService {
     this.graphClient = Client.init({
       authProvider: async (done) => {
         // Get the token from the auth service
-        let token = await this.authService.getAccessToken()
+        let token = await this.authService.getAccessToken(OAuthSettings.scopes)
           .catch((reason) => {
             done(reason, null);
           });
