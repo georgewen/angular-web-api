@@ -16,33 +16,36 @@ import { OAuthSettings } from 'src/oauth';
 })
 export class TimesheetService {
 
+  accessToken: string;
+
   constructor(private authService: AuthService,
     private alertsService: AlertsService,
     private http: HttpClient
     ) { 
-
-      
+      this.authService.getAccessToken(OAuthSettings.scopes2).then(data => {
+        this.accessToken = data;
+      });            
     }
 
     
-    getTimeSheets():TimeSheet[] {
+     getTimeSheets():Observable<TimeSheet[]> {
 
-      var accessToken: string;
-
-    try {
-
-//test code start
-      
-    this.authService.getAccessToken(OAuthSettings.scopes2).then(data =>
+     // var accessToken = await this.authService.getAccessToken(OAuthSettings.scopes2);
+      var header = {headers: new HttpHeaders() 
+        .set('Authorization',  'Bearer ' + this.accessToken)
+}  
+      return this.http.get<Array<TimeSheet>>('https://localhost:44301/api/TimeSheets?WeekEnding=2018-10-01',header);
+}
+      /*
+    this.authService.getAccessToken(OAuthSettings.scopes2).then(accessToken =>
     {
-      accessToken = data;
       //alert(accessToken);
       var xmlHttp = new XMLHttpRequest();
       xmlHttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200)
             alert(this.responseText);
       }
-      xmlHttp.open("GET", 'https://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-31', true); // true for asynchronous
+      xmlHttp.open("GET", 'https://localhost:44301/api/TimeSheets?WeekEnding=2018-10-31', true); // true for asynchronous
       xmlHttp.setRequestHeader('Authorization', 'Bearer ' + accessToken);
       ///xmlHttp.send();
     //test code end
@@ -51,18 +54,15 @@ export class TimesheetService {
               .set('Authorization',  'Bearer ' + accessToken)
       }      
     
-      //return this.http.get<Array<TimeSheet>>('https://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01',header);
+      //return this.http.get<Array<TimeSheet>>('https://localhost:44301/api/TimeSheets?WeekEnding=2018-10-01',header);
       this.http.get<TimeSheet[]>('https://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01',header).subscribe(data => {
         //for (let ts of data) {
         //  console.log(ts.TimeID); // 1, "string", false
         //}  
       return data;
-        })
+        });
     });
-      return null;
-    } catch (error) {
-      this.alertsService.add('Could not get events', JSON.stringify(error, null, 2));
-    }
+  //    return null;
   }
-
+*/
 }
