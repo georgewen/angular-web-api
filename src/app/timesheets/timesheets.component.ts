@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { TimeSheet } from '../timesheet';
 import { TimesheetService } from '../timesheet.service';
-import { Observable, of } from 'rxjs';
+import { TimeSheet } from '../timesheet';
 
 @Component({
-  selector: 'app-timesheet',
-  templateUrl: './timesheet.component.html',
-  styleUrls: ['./timesheet.component.css']
+  selector: 'app-timesheets',
+  templateUrl: './timesheets.component.html',
+  styleUrls: ['./timesheets.component.css']
 })
-export class TimesheetComponent implements OnInit {
+
+export class TimesheetsComponent implements OnInit {
 
   timesheets: TimeSheet[];
   addingmode = false;

@@ -55,6 +55,11 @@ export class AuthService {
   private async getUser(): Promise<User> {
     if (!this.authenticated) return null;
 
+    this.getAccessToken(OAuthSettings.scopes2).then(data => {
+      //localStorage.setItem('api_token', data);
+      sessionStorage.setItem('api_token', data);
+    });
+
     let graphClient = Client.init({
       // Initialize the Graph client with an auth
       // provider that requests the token from the

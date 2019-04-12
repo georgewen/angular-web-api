@@ -22,47 +22,49 @@ export class TimesheetService {
     private alertsService: AlertsService,
     private http: HttpClient
     ) { 
-      this.authService.getAccessToken(OAuthSettings.scopes2).then(data => {
-        this.accessToken = data;
-      });            
+      //this.authService.getAccessToken(OAuthSettings.scopes2).then(data => {
+      //  this.accessToken = data;
+      //});       
+      this.accessToken = sessionStorage.getItem('api_token'); //or localStorage ?      
     }
 
     
-     getTimeSheets():Observable<TimeSheet[]> {
+     getTimeSheets(WeekEnding:string):Observable<TimeSheet[]> {
 
-     // var accessToken = await this.authService.getAccessToken(OAuthSettings.scopes2);
       var header = {headers: new HttpHeaders() 
         .set('Authorization',  'Bearer ' + this.accessToken)
-}  
-      return this.http.get<Array<TimeSheet>>('https://localhost:44301/api/TimeSheets?WeekEnding=2018-10-01',header);
-}
-      /*
-    this.authService.getAccessToken(OAuthSettings.scopes2).then(accessToken =>
-    {
-      //alert(accessToken);
-      var xmlHttp = new XMLHttpRequest();
-      xmlHttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200)
-            alert(this.responseText);
-      }
-      xmlHttp.open("GET", 'https://localhost:44301/api/TimeSheets?WeekEnding=2018-10-31', true); // true for asynchronous
-      xmlHttp.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-      ///xmlHttp.send();
-    //test code end
+      }  
+      return this.http.get<Array<TimeSheet>>(`https://localhost:44301/api/TimeSheets?WeekEnding=${WeekEnding}`,header);
+    }
 
+    getTimeSheet(id:number):Observable<TimeSheet> {
       var header = {headers: new HttpHeaders() 
-              .set('Authorization',  'Bearer ' + accessToken)
-      }      
-    
-      //return this.http.get<Array<TimeSheet>>('https://localhost:44301/api/TimeSheets?WeekEnding=2018-10-01',header);
-      this.http.get<TimeSheet[]>('https://localhost:44301/api/TimeSheets?ResourceID=QW12038&WeekEnding=2018-10-01',header).subscribe(data => {
-        //for (let ts of data) {
-        //  console.log(ts.TimeID); // 1, "string", false
-        //}  
-      return data;
-        });
-    });
-  //    return null;
-  }
-*/
+        .set('Authorization',  'Bearer ' + this.accessToken)
+      }  
+      return this.http.get<TimeSheet>(`https://localhost:44301/api/TimeSheets/${id}`,header);
+    }
+  
+    //save existing
+    updateTimeSheet(id:number, ts:TimeSheet){
+      var header = {headers: new HttpHeaders() 
+        .set('Authorization',  'Bearer ' + this.accessToken)
+      }  
+      return this.http.put<TimeSheet>(`https://localhost:44301/api/TimeSheets/${id}`,ts, header);
+    }
+    //add new timesheet
+    addTimeSheet(ts:TimeSheet){
+      var header = {headers: new HttpHeaders() 
+        .set('Authorization',  'Bearer ' + this.accessToken)
+      }  
+      return this.http.post<TimeSheet>(`https://localhost:44301/api/TimeSheets`,ts, header);
+    }
+
+    //add new timesheet
+    deleteTimeSheet(id:number){
+      var header = {headers: new HttpHeaders() 
+        .set('Authorization',  'Bearer ' + this.accessToken)
+      }  
+      return this.http.post<TimeSheet>(`https://localhost:44301/api/TimeSheets/${id}`, header);
+    }    
+
 }
