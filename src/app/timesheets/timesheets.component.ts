@@ -20,7 +20,7 @@ export class TimesheetsComponent implements OnInit {
     this.getTimeSheets();
   }
   getTimeSheets() {
-    this.timesheetService.getTimeSheets('2018-10-01').subscribe(data => {
+    this.timesheetService.getTimeSheets('2012-05-31').subscribe(data => {
       this.timesheets = data;
     });
   } 

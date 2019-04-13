@@ -1,21 +1,9 @@
 <h1>TimeSheet</h1>
 <table class="table">
-  <thead>
-    <th scope="col">ProjectCode</th>
-    <th scope="col">Task</th>
-    <th scope="col">Date</th>
-    <th scope="col">Hours</th>
-    <th></th>
-    <th></th>
-  </thead>
-  <tbody>
-    <tr *ngFor="let timesheet of timesheets">
-      <td>{{timesheet.ProjectCode}}</td>
-      <td>{{timesheet.TaskUID}}</td>
-      <td>{{timesheet.TimeEntryDate}}</td>
-      <td>{{timesheet.StandardHours}}</td>
-      <td><button>Edit</button></td>
-      <td><button>Delete</button></td>
-    </tr>
-  </tbody>
+<tr>
+      <td>ProjectCode</td><td>{{timesheet.ProjectCode}}</td>
+      <td>TaskUID</td><td>{{timesheet.TaskUID}}</td>
+      <td>Date</td><td>{{timesheet.TimeEntryDate}}</td>
+      <td>Hours</td><td>{{timesheet.StandardHours}}</td>
+</tr>
 </table>

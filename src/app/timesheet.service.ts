@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Client } from '@microsoft/microsoft-graph-client';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 
 import { AuthService } from './auth.service';
-import { Event } from './event';
 import { AlertsService } from './alerts.service';
 import { TimeSheet } from './timesheet';
-import { access } from 'fs';
-import { OAuthSettings } from 'src/oauth';
 
 @Injectable({
   providedIn: 'root'
