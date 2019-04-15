@@ -4,6 +4,7 @@ export class TimeEntry{
     ProjectCode: string;
     TaskUID: number; 
     ActivityCode: string;
+    StatusCode: string;
     Mon: TimeSheet;
     Tue: TimeSheet;
     Wed: TimeSheet;

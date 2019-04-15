@@ -1,4 +1,6 @@
 <div *ngIf="timesheet">
-<input id={{timesheet.TimeID}} attr.data-projectcode={{timesheet.ProjectCode}} attr.data-taskuid={{timesheet.TaskUID}} [(ngModel)]="timesheet.StandardHours"  (change)="saveTimeSheet()" size="4" />
+<input id={{timesheet.TimeID}} attr.data-projectcode={{timesheet.ProjectCode}} attr.data-taskuid={{timesheet.TaskUID}} 
+[(ngModel)]="timesheet.StandardHours" [disabled] = "timesheet.StatusCode!='N'"
+(change)="saveTimeSheet()" size="4" />
 <!-- <button (click) = "saveTimeSheet()">Save</button> -->
 </div>

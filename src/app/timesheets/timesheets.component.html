@@ -3,6 +3,7 @@
   <thead>
     <th scope="col">ProjectCode</th>
     <th scope="col">Task</th>
+    <th scope="col">Status</th>
     <th scope="col">Monday</th>
     <th scope="col">Tuesday</th>
     <th scope="col">Wednesday</th>
@@ -27,12 +28,11 @@
       <td></td>      
       <td></td>      
     </tr>  -->
-
-
     
       <tr *ngFor="let time of timeentries">
         <td>{{time.ProjectCode}}</td>
         <td>{{time.TaskUID}}</td>
+        <td>{{time.StatusCode}}</td>
         <td><app-timesheet [timesheet]="time.Mon"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Tue"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Wed"></app-timesheet></td>
