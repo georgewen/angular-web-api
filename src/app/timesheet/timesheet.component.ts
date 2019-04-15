@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TimeSheet } from '../timesheet';
 import { TimesheetService } from '../timesheet.service';
-import { AlertsService } from '../alerts.service';
-import { Observable, of } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-timesheet',
@@ -11,12 +10,30 @@ import { Observable, of } from 'rxjs';
 })
 export class TimesheetComponent implements OnInit {
 
-  timesheet: TimeSheet;
+  @Input() timesheet: TimeSheet;
 
-  constructor() { }
+  constructor(
+    private timeService: TimesheetService,
+    private location: Location
+    ) { }
 
   ngOnInit() {
-
   }
 
+  getTimeSheet(id:number) {
+    this.timeService.getTimeSheet(id).subscribe( (timesheet)=> this.timesheet = timesheet);
+  }
+
+  goBack():void{
+    this.location.back();
+  }
+  saveTimeSheet(){
+
+    //if timeid is null then create new otherwise update.
+    
+    this.timeService.updateTimeSheet(this.timesheet.TimeID,this.timesheet).subscribe( 
+      //()=> this.goBack())
+      ()=>alert("Saved!")
+    )
+  }
 }

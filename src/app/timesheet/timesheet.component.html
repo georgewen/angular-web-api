@@ -1,9 +1,4 @@
-<h1>TimeSheet</h1>
-<table class="table">
-<tr>
-      <td>ProjectCode</td><td>{{timesheet.ProjectCode}}</td>
-      <td>TaskUID</td><td>{{timesheet.TaskUID}}</td>
-      <td>Date</td><td>{{timesheet.TimeEntryDate}}</td>
-      <td>Hours</td><td>{{timesheet.StandardHours}}</td>
-</tr>
-</table>
+<div *ngIf="timesheet">
+<input id={{timesheet.TimeID}} attr.data-projectcode={{timesheet.ProjectCode}} attr.data-taskuid={{timesheet.TaskUID}} [(ngModel)]="timesheet.StandardHours"  (change)="saveTimeSheet()" size="4" />
+<!-- <button (click) = "saveTimeSheet()">Save</button> -->
+</div>

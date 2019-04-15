@@ -3,21 +3,45 @@
   <thead>
     <th scope="col">ProjectCode</th>
     <th scope="col">Task</th>
-    <th scope="col">Date</th>
-    <th scope="col">Hours</th>
+    <th scope="col">Monday</th>
+    <th scope="col">Tuesday</th>
+    <th scope="col">Wednesday</th>
+    <th scope="col">Thursday</th>
+    <th scope="col">Friday</th>
+    <th scope="col">Saturday</th>
+    <th scope="col">Sunday</th>
     <th></th>
     <th></th>
   </thead>
+  
   <tbody>
-    <tr *ngFor="let timesheet of timesheets">
+
+  <!-- <tr *ngFor="let timesheet of timesheets">
       <td>{{timesheet.ProjectCode}}</td>
       <td>{{timesheet.TaskUID}}</td>
-      <td>{{timesheet.TimeEntryDate}}</td>
-      <td>{{timesheet.StandardHours}}</td>
-      <td><button>Edit</button></td>
-      <td><button>Delete</button></td>
-    </tr>
-  </tbody>
+      <td><app-timesheet [timesheet]="timesheet"></app-timesheet></td>
+      <td></td>      
+      <td></td>      
+      <td></td>      
+      <td></td>      
+      <td></td>      
+      <td></td>      
+    </tr>  -->
+
+
+    
+      <tr *ngFor="let time of timeentries">
+        <td>{{time.ProjectCode}}</td>
+        <td>{{time.TaskUID}}</td>
+        <td><app-timesheet [timesheet]="time.Mon"></app-timesheet></td>
+        <td><app-timesheet [timesheet]="time.Tue"></app-timesheet></td>
+        <td><app-timesheet [timesheet]="time.Wed"></app-timesheet></td>
+        <td><app-timesheet [timesheet]="time.Thu"></app-timesheet></td>
+        <td><app-timesheet [timesheet]="time.Fri"></app-timesheet></td>
+        <td><app-timesheet [timesheet]="time.Sat"></app-timesheet></td>
+        <td><app-timesheet [timesheet]="time.Sun"></app-timesheet></td>
+      </tr>
+    </tbody>
+
 </table>
 
-<!-- <app-timesheet [timesheet]="selectedTime"></app-timesheet> -->
