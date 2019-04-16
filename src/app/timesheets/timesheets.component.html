@@ -24,13 +24,20 @@
         <td>{{time.ProjectCode}}</td>
         <td>{{time.TaskUID}}</td>
         <td>{{time.StatusCode}}</td>
-        <td><app-timesheet [timesheet]="time.Mon"></app-timesheet></td>
+        <!-- <td><app-timesheet [timesheet]="time.Mon"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Tue"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Wed"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Thu"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Fri"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Sat"></app-timesheet></td>
-        <td><app-timesheet [timesheet]="time.Sun"></app-timesheet></td>
+        <td><app-timesheet [timesheet]="time.Sun"></app-timesheet></td> -->
+        <td><input id="time.Mon.TimeID" attr.data-projectcode="time.Mon.ProjectCode" attr.data-taskuid="time.Mon.TaskUID"  [(ngModel)]="time.Mon.StandardHours" [disabled] = "time.Mon.StatusCode!='N'" (change)="saveTimeSheet(time.Mon)" size="4" /></td>
+        <td><input id="time.Tue.TimeID" attr.data-projectcode="time.Tue.ProjectCode" attr.data-taskuid="time.Tue.TaskUID"  [(ngModel)]="time.Tue.StandardHours" [disabled] = "time.Tue.StatusCode!='N'" (change)="saveTimeSheet(time.Tue)" size="4" /></td>
+        <td><input id="time.Wed.TimeID" attr.data-projectcode="time.Wed.ProjectCode" attr.data-taskuid="time.Wed.TaskUID"  [(ngModel)]="time.Wed.StandardHours" [disabled] = "time.Wed.StatusCode!='N'" (change)="saveTimeSheet(time.Wed)" size="4" /></td>
+        <td><input id="time.Thu.TimeID" attr.data-projectcode="time.Thu.ProjectCode" attr.data-taskuid="time.Thu.TaskUID"  [(ngModel)]="time.Thu.StandardHours" [disabled] = "time.Thu.StatusCode!='N'" (change)="saveTimeSheet(time.Thu)" size="4" /></td>
+        <td><input id="time.Fri.TimeID" attr.data-projectcode="time.Fri.ProjectCode" attr.data-taskuid="time.Fri.TaskUID"  [(ngModel)]="time.Fri.StandardHours" [disabled] = "time.Fri.StatusCode!='N'" (change)="saveTimeSheet(time.Fri)" size="4" /></td>
+        <td><input id="time.Sat.TimeID" attr.data-projectcode="time.Sat.ProjectCode" attr.data-taskuid="time.Sat.TaskUID"  [(ngModel)]="time.Sat.StandardHours" [disabled] = "time.Sat.StatusCode!='N'" (change)="saveTimeSheet(time.Sat)" size="4" /></td>
+        <td><input id="time.Sun.TimeID" attr.data-projectcode="time.Sun.ProjectCode" attr.data-taskuid="time.Sun.TaskUID"  [(ngModel)]="time.Sun.StandardHours" [disabled] = "time.Sun.StatusCode!='N'" (change)="saveTimeSheet(time.Sun)" size="4" /></td>
       </tr>
     </tbody>
 </table>
