@@ -3,6 +3,9 @@ import { TimesheetService } from '../timesheet.service';
 import { TimeSheet } from '../timesheet';
 import { TimeEntry } from '../TimeEntry';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment-timezone';
+import { projection } from '@angular/core/src/render3';
+
 @Component({
   selector: 'app-timesheets',
   templateUrl: './timesheets.component.html',
@@ -17,18 +20,60 @@ export class TimesheetsComponent implements OnInit {
   //transform timesheet to weekly tabular format
   timeentries:TimeEntry[] =[];
   WeekEndingDate: string;
+  //ProjectList = [{ProjectCode:"7060533",ProjectName:"7060533"},{ProjectCode:"7060506",ProjectName:"7060506"}];
+  TasksList = //[{"0000123", Tasks:[10,20,30]},{"0000235", Tasks: [1,2,3]}]
+  [{
+    ProjectCode: "7060533",
+    Tasks: ['Miami', 'Ft.Lauderdale', 'Tampa']
+  }, {
+    ProjectCode: "7060506",
+    Tasks: ['San Diego', 'San Francisco', 'L.A.']
+  }, {
+    ProjectCode: "0000235",
+    Tasks: ['Dallas', 'San Antonio', 'Anywhere USA']
+  }
+];
+ProjectTaskList: string[];
+ProjectCode:string;
+TaskUID:string;
+
   
   constructor(private timesheetService: TimesheetService,private route: ActivatedRoute) { 
     //this.timeentries = new Array();
   }
 
   ngOnInit() {
-    
+        
     var weekending2 = this.route.snapshot.queryParams["q"];
     var weekending = "2012-05-27";//'2018-10-28';
 
+    if(weekending2){ 
+      this.WeekEndingDate = weekending2;
+      weekending = weekending2;
+    }
     this.WeekEndingDate =  weekending;
     this.getTimeSheets(weekending);
+  }
+
+  AddTime(){
+    //add one record to timeentries...first check if exists already with status 'N'
+    
+    alert(this.ProjectCode + ":" + this.TaskUID);
+  }
+  selectProject(ProjectCode:string){
+    this.ProjectTaskList=[];
+    var idx = this.TasksList.findIndex((i)=> {return i.ProjectCode == ProjectCode});
+    this.ProjectTaskList = this.TasksList[idx].Tasks;
+    //this.ProjectCode = ProjectCode;
+  }
+  subtractDateTime(dateTime: string, days:number): string {
+    try {
+      //return moment.tz(dateTime, timeZone).format();
+      return  moment(dateTime).subtract('days',days)
+    }
+    catch(error) {
+      console.log('DateTimeTimeZone conversion error', JSON.stringify(error));
+    }
   }
 
   goBackward(){
@@ -61,7 +106,7 @@ export class TimesheetsComponent implements OnInit {
           if (this.timeentries.length > 0)
           {
               exists = this.timeentries.filter(t=> t.ProjectCode==timesheet.ProjectCode && t.TaskUID == timesheet.TaskUID && t.StatusCode == timesheet.StatusCode);                     
-              console.log(this.timeentries.length);
+              //console.log(this.timeentries.length);
             }          
 
           if(!exists || exists.length==0)
@@ -76,7 +121,7 @@ export class TimesheetsComponent implements OnInit {
             weekTime.Mon = new TimeSheet();
             weekTime.Mon.ProjectCode = timesheet.ProjectCode;
             weekTime.Mon.TaskUID = timesheet.TaskUID;
-            weekTime.Mon.StatusCode = timesheet.StatusCode;
+            weekTime.Mon.StatusCode = "N";
 
             var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 6 );
@@ -85,6 +130,7 @@ export class TimesheetsComponent implements OnInit {
             weekTime.Tue = new TimeSheet();
             weekTime.Tue.ProjectCode = timesheet.ProjectCode;
             weekTime.Tue.TaskUID = timesheet.TaskUID;
+            weekTime.Tue.StatusCode = "N";
             var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 5 );
             weekTime.Tue.TimeEntryDate = tempdate.toDateString();
@@ -92,6 +138,7 @@ export class TimesheetsComponent implements OnInit {
             weekTime.Wed = new TimeSheet();
             weekTime.Wed.ProjectCode = timesheet.ProjectCode;
             weekTime.Wed.TaskUID = timesheet.TaskUID;
+            weekTime.Wed.StatusCode = "N";
             var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 4 );
             weekTime.Wed.TimeEntryDate = tempdate.toDateString();
@@ -99,6 +146,7 @@ export class TimesheetsComponent implements OnInit {
             weekTime.Thu = new TimeSheet();
             weekTime.Thu.ProjectCode = timesheet.ProjectCode;
             weekTime.Thu.TaskUID = timesheet.TaskUID;
+            weekTime.Thu.StatusCode = "N";
             var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 3 );
             weekTime.Thu.TimeEntryDate = tempdate.toDateString();
@@ -106,6 +154,7 @@ export class TimesheetsComponent implements OnInit {
             weekTime.Fri = new TimeSheet();
             weekTime.Fri.ProjectCode = timesheet.ProjectCode;
             weekTime.Fri.TaskUID = timesheet.TaskUID;
+            weekTime.Fri.StatusCode = "N";
             var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 2 );
             weekTime.Fri.TimeEntryDate = tempdate.toDateString();
@@ -181,7 +230,7 @@ export class TimesheetsComponent implements OnInit {
 
           }
       })
-      console.log(this.timeentries);
+      //console.log(this.timeentries);
     });
   } 
 

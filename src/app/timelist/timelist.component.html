@@ -1,5 +1,6 @@
 
-<button (click)="goBack()">Back</button>
+<!-- <button (click)="goBack()">Back</button> -->
+<a href="/timesheets?q={{WeekEnding | date:'yyyy-MM-dd'}}">Week View</a>
 <table class="table">
   <thead>
     <th scope="col">ProjectCode</th>
@@ -8,6 +9,7 @@
     <th scope="col">Date</th>
     <th scope="col">Hours</th>
     <th scope="col">Delete</th>
+    <th scope="col">Detail</th>
   </thead>  
   <tbody>
 
@@ -15,15 +17,15 @@
       <td>{{timesheet.ProjectCode}}</td>
       <td>{{timesheet.TaskUID}}</td>
       <td>{{timesheet.StatusCode}}</td>
-      <td>{{timesheet.TimeEntryDate}}</td>
+      <td>{{timesheet.TimeEntryDate | date:'dd/MM/yyyy'}}</td>
       <td>
         <input id={{timesheet.TimeID}} [(ngModel)]="timesheet.StandardHours" [disabled] = "timesheet.StatusCode!='N'"
-        (change)="saveTimeSheet(i)" size="4" />        
+        (change)="saveTimeSheet(timesheet)" size="4" />        
       </td>
-      <td><button>Delete</button></td>
-    </tr>  
-    
-    </tbody>
-
+      <td><button id={{timesheet.TimeID}} [hidden] ="timesheet.StatusCode!='N'" (click)="deleteTime(timesheet)">Delete</button></td>
+      <td><button>Detail</button></td>
+    </tr>      
+    </tbody>    
 </table>
+
 

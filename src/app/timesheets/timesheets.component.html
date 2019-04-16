@@ -1,36 +1,23 @@
 <h1>TimeSheet</h1>
-<a href="/timelist?q={{WeekEndingDate}}">Time List View</a><br />
-<button name="backward" (click)="goBackward()">&lt;&lt;</button><button name="forward" (click)="goForward()">&gt;&gt;</button><div>{{WeekEndingDate}}</div>
+<a href="/timelist?q={{WeekEndingDate | date:'yyyy-MM-dd'}}">Time List View</a><br />
+<button name="backward" (click)="goBackward()">&lt;&lt;</button><button name="forward" (click)="goForward()">&gt;&gt;</button>
+<div>{{WeekEndingDate | date:'dd/MM/yyyy'}}</div>
 <table class="table">
   <thead>
     <th scope="col">ProjectCode</th>
     <th scope="col">Task</th>
     <th scope="col">Status</th>
-    <th scope="col">Monday</th>
-    <th scope="col">Tuesday</th>
-    <th scope="col">Wednesday</th>
-    <th scope="col">Thursday</th>
-    <th scope="col">Friday</th>
-    <th scope="col">Saturday</th>
-    <th scope="col">Sunday</th>
-    <th></th>
-    <th></th>
+    <th scope="col">{{subtractDateTime(WeekEndingDate,6) | date:'dd/MM' }}</th>
+    <th scope="col">{{subtractDateTime(WeekEndingDate,5) | date:'dd/MM' }}</th>
+    <th scope="col">{{subtractDateTime(WeekEndingDate,4) | date:'dd/MM' }}</th>
+    <th scope="col">{{subtractDateTime(WeekEndingDate,3) | date:'dd/MM' }}</th>
+    <th scope="col">{{subtractDateTime(WeekEndingDate,2) | date:'dd/MM' }}</th>
+    <th scope="col">{{subtractDateTime(WeekEndingDate,1) | date:'dd/MM' }}</th>
+    <th scope="col">{{subtractDateTime(WeekEndingDate,0) | date:'dd/MM' }}</th>
+
   </thead>
   
   <tbody>
-
-  <!-- <tr *ngFor="let timesheet of timesheets">
-      <td>{{timesheet.ProjectCode}}</td>
-      <td>{{timesheet.TaskUID}}</td>
-      <td><app-timesheet [timesheet]="timesheet"></app-timesheet></td>
-      <td></td>      
-      <td></td>      
-      <td></td>      
-      <td></td>      
-      <td></td>      
-      <td></td>      
-    </tr>  -->
-    
       <tr *ngFor="let time of timeentries">
         <td>{{time.ProjectCode}}</td>
         <td>{{time.TaskUID}}</td>
@@ -47,3 +34,13 @@
 
 </table>
 
+<br />
+<select [(ngModel)]="ProjectCode" (change)="selectProject($event.target.value)">
+  <option *ngFor='let proj of TasksList' [value]="proj.ProjectCode">{{proj.ProjectCode}}</option>
+</select>
+
+<select [(ngModel)]="TaskUID">
+  <option *ngFor='let task of ProjectTaskList' [value]="task">{{task}}</option>
+</select>
+<!-- <input [(ngModel)]="Hours" size="4"/> -->
+<button [hidden]="TaskUID==null" (click)="AddTime()">Add</button>

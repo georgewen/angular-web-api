@@ -60,7 +60,7 @@ export class TimesheetService {
       var header = {headers: new HttpHeaders() 
         .set('Authorization',  'Bearer ' + this.accessToken)
       }  
-      return this.http.post<TimeSheet>(`https://localhost:44301/api/TimeSheets/${id}`, header);
+      return this.http.delete<TimeSheet>(`https://localhost:44301/api/TimeSheets/${id}`, header);
     }    
 
 }

@@ -30,10 +30,15 @@ export class TimesheetComponent implements OnInit {
   saveTimeSheet(){
 
     //if timeid is null then create new otherwise update.
-    
+    if (!this.timesheet.TimeID){
+      this.timeService.addTimeSheet(this.timesheet).subscribe((t)=>alert("new time saved!" + t.TimeID));
+    }
+    else
+    {
     this.timeService.updateTimeSheet(this.timesheet.TimeID,this.timesheet).subscribe( 
       //()=> this.goBack())
       ()=>alert("Saved!")
     )
+    }
   }
 }

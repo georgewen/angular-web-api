@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TimesheetService } from '../timesheet.service';
 import { TimeSheet } from '../timesheet';
+import { toString } from '@ng-bootstrap/ng-bootstrap/util/util';
 
 @Component({
   selector: 'app-timelist',
@@ -32,12 +33,24 @@ export class TimelistComponent implements OnInit {
     })
   }
 
-  saveTimeSheet(idx:number){
+  saveTimeSheet(ts:TimeSheet) {//idx:number){
       //alert(idx);
-      this.timeService.updateTimeSheet(this.timesheets[idx].TimeID,this.timesheets[idx]).subscribe( 
-      //()=> this.goBack())
+      //this.timeService.updateTimeSheet(this.timesheets[idx].TimeID,this.timesheets[idx]).subscribe( 
+      this.timeService.updateTimeSheet(ts.TimeID,ts).subscribe( 
+          //()=> this.goBack())
       ()=>alert("Saved!")
     )
+  }
+
+  deleteTime(ts:TimeSheet){
+    this.timeService.deleteTimeSheet(ts.TimeID).subscribe(()=>{
+      alert("deleted!");
+      var idx = this.timesheets.indexOf(ts);
+      if(idx >0)
+      {
+        this.timesheets.splice(idx,1);
+      }
+    })
   }
 
   goBack(): void {
