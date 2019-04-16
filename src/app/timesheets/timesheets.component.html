@@ -1,4 +1,6 @@
 <h1>TimeSheet</h1>
+<a href="/timelist?q={{WeekEndingDate}}">Time List View</a><br />
+<button name="backward" (click)="goBackward()">&lt;&lt;</button><button name="forward" (click)="goForward()">&gt;&gt;</button><div>{{WeekEndingDate}}</div>
 <table class="table">
   <thead>
     <th scope="col">ProjectCode</th>

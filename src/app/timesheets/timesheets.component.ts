@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TimesheetService } from '../timesheet.service';
 import { TimeSheet } from '../timesheet';
 import { TimeEntry } from '../TimeEntry';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-timesheets',
   templateUrl: './timesheets.component.html',
@@ -15,20 +16,41 @@ export class TimesheetsComponent implements OnInit {
   selectedTime: TimeSheet;
   //transform timesheet to weekly tabular format
   timeentries:TimeEntry[] =[];
+  WeekEndingDate: string;
   
-  constructor(private timesheetService: TimesheetService) { 
+  constructor(private timesheetService: TimesheetService,private route: ActivatedRoute) { 
     //this.timeentries = new Array();
   }
 
   ngOnInit() {
-    this.getTimeSheets();
-  }
-
-  getTimeSheets() {
     
+    var weekending2 = this.route.snapshot.queryParams["q"];
     var weekending = "2012-05-27";//'2018-10-28';
 
-    this.timesheetService.getTimeSheets(weekending).subscribe(data => {
+    this.WeekEndingDate =  weekending;
+    this.getTimeSheets(weekending);
+  }
+
+  goBackward(){
+    var weekending = new Date(this.WeekEndingDate);
+    weekending.setDate(weekending.getDate()-7);
+    this.WeekEndingDate = weekending.toDateString();
+    this.getTimeSheets(weekending.toLocaleString());
+  }
+
+  goForward(){
+    var weekending = new Date(this.WeekEndingDate);
+    weekending.setDate(weekending.getDate()+7);
+    this.WeekEndingDate = weekending.toDateString();
+    this.getTimeSheets(weekending.toLocaleString());
+  }
+
+  getTimeSheets(WeekEnding:string) {
+    
+    //var weekending = "2012-05-27";//'2018-10-28';
+    this.timeentries = [];
+    this.timesheets = [];
+    this.timesheetService.getTimeSheets(WeekEnding).subscribe(data => {
       this.timesheets = data;
       //now transform timesheets to timeentries
       data.forEach( (timesheet) =>{
@@ -56,35 +78,35 @@ export class TimesheetsComponent implements OnInit {
             weekTime.Mon.TaskUID = timesheet.TaskUID;
             weekTime.Mon.StatusCode = timesheet.StatusCode;
 
-            var tempdate = new Date(weekending);
+            var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 6 );
             weekTime.Mon.TimeEntryDate = tempdate.toDateString();
 
             weekTime.Tue = new TimeSheet();
             weekTime.Tue.ProjectCode = timesheet.ProjectCode;
             weekTime.Tue.TaskUID = timesheet.TaskUID;
-            var tempdate = new Date(weekending);
+            var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 5 );
             weekTime.Tue.TimeEntryDate = tempdate.toDateString();
 
             weekTime.Wed = new TimeSheet();
             weekTime.Wed.ProjectCode = timesheet.ProjectCode;
             weekTime.Wed.TaskUID = timesheet.TaskUID;
-            var tempdate = new Date(weekending);
+            var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 4 );
             weekTime.Wed.TimeEntryDate = tempdate.toDateString();
 
             weekTime.Thu = new TimeSheet();
             weekTime.Thu.ProjectCode = timesheet.ProjectCode;
             weekTime.Thu.TaskUID = timesheet.TaskUID;
-            var tempdate = new Date(weekending);
+            var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 3 );
             weekTime.Thu.TimeEntryDate = tempdate.toDateString();
 
             weekTime.Fri = new TimeSheet();
             weekTime.Fri.ProjectCode = timesheet.ProjectCode;
             weekTime.Fri.TaskUID = timesheet.TaskUID;
-            var tempdate = new Date(weekending);
+            var tempdate = new Date(WeekEnding);
             tempdate.setDate(tempdate.getDate()- 2 );
             weekTime.Fri.TimeEntryDate = tempdate.toDateString();
 

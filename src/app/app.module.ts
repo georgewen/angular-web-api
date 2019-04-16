@@ -19,6 +19,7 @@ import { OAuthSettings } from '../oauth';
 import { CalendarComponent } from './calendar/calendar.component';
 import { TimesheetComponent } from './timesheet/timesheet.component';
 import { TimesheetsComponent } from './timesheets/timesheets.component';
+import { TimelistComponent } from './timelist/timelist.component';
 
 // Add FontAwesome icons
 library.add(faExternalLinkAlt);
@@ -32,7 +33,8 @@ library.add(faUserCircle);
     AlertsComponent,
     CalendarComponent,
     TimesheetComponent,
-    TimesheetsComponent
+    TimesheetsComponent,
+    TimelistComponent
   ],
   imports: [
     BrowserModule,

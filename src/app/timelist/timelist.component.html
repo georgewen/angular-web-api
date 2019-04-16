@@ -1,0 +1,29 @@
+
+<button (click)="goBack()">Back</button>
+<table class="table">
+  <thead>
+    <th scope="col">ProjectCode</th>
+    <th scope="col">Task</th>
+    <th scope="col">Status</th>
+    <th scope="col">Date</th>
+    <th scope="col">Hours</th>
+    <th scope="col">Delete</th>
+  </thead>  
+  <tbody>
+
+<tr *ngFor="let timesheet of timesheets, let i = index">
+      <td>{{timesheet.ProjectCode}}</td>
+      <td>{{timesheet.TaskUID}}</td>
+      <td>{{timesheet.StatusCode}}</td>
+      <td>{{timesheet.TimeEntryDate}}</td>
+      <td>
+        <input id={{timesheet.TimeID}} [(ngModel)]="timesheet.StandardHours" [disabled] = "timesheet.StatusCode!='N'"
+        (change)="saveTimeSheet(i)" size="4" />        
+      </td>
+      <td><button>Delete</button></td>
+    </tr>  
+    
+    </tbody>
+
+</table>
+
