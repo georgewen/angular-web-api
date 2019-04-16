@@ -1,5 +1,9 @@
 <h1>TimeSheet</h1>
-<a href="/timelist?q={{WeekEndingDate | date:'yyyy-MM-dd'}}">Time List View</a><br />
+
+<!-- <a href="/timelist?q={{WeekEndingDate | date:'yyyy-MM-dd'}}">Detail View</a><br /> -->
+<button (click)="toggleView()">{{weekview?"Detail View":"Week View"}}</button>
+
+<span *ngIf="weekview==true">  
 <button name="backward" (click)="goBackward()">&lt;&lt;</button><button name="forward" (click)="goForward()">&gt;&gt;</button>
 <div>{{WeekEndingDate | date:'dd/MM/yyyy'}}</div>
 <table class="table">
@@ -14,9 +18,7 @@
     <th scope="col">{{subtractDateTime(WeekEndingDate,2) | date:'dd/MM' }}</th>
     <th scope="col">{{subtractDateTime(WeekEndingDate,1) | date:'dd/MM' }}</th>
     <th scope="col">{{subtractDateTime(WeekEndingDate,0) | date:'dd/MM' }}</th>
-
-  </thead>
-  
+  </thead> 
   <tbody>
       <tr *ngFor="let time of timeentries">
         <td>{{time.ProjectCode}}</td>
@@ -31,7 +33,6 @@
         <td><app-timesheet [timesheet]="time.Sun"></app-timesheet></td>
       </tr>
     </tbody>
-
 </table>
 
 <br />
@@ -44,3 +45,33 @@
 </select>
 <!-- <input [(ngModel)]="Hours" size="4"/> -->
 <button [hidden]="TaskUID==null" (click)="AddTime()">Add</button>
+</span>
+
+<span id="detailview" *ngIf="weekview==false">
+  <table class="table">
+    <thead>
+      <th scope="col">ProjectCode</th>
+      <th scope="col">Task</th>
+      <th scope="col">Status</th>
+      <th scope="col">Date</th>
+      <th scope="col">Hours</th>
+      <th scope="col">Delete</th>
+      <th scope="col">Detail</th>
+    </thead>  
+    <tbody>
+  
+  <tr *ngFor="let timesheet of timesheets, let i = index">
+        <td>{{timesheet.ProjectCode}}</td>
+        <td>{{timesheet.TaskUID}}</td>
+        <td>{{timesheet.StatusCode}}</td>
+        <td>{{timesheet.TimeEntryDate | date:'dd/MM/yyyy'}}</td>
+        <td>
+          <input id={{timesheet.TimeID}} [(ngModel)]="timesheet.StandardHours" [disabled] = "timesheet.StatusCode!='N'"
+          (change)="saveTimeSheet(timesheet)" size="4" />        
+        </td>
+        <td><button id={{timesheet.TimeID}} [hidden] ="timesheet.StatusCode!='N'" (click)="deleteTime(timesheet)">Delete</button></td>
+        <td><button>Detail</button></td>
+      </tr>      
+      </tbody>    
+  </table>
+</span>

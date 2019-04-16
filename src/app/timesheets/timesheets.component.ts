@@ -16,6 +16,7 @@ export class TimesheetsComponent implements OnInit {
 
   timesheets: TimeSheet[];
   addingmode = false;
+  weekview = false;
   selectedTime: TimeSheet;
   //transform timesheet to weekly tabular format
   timeentries:TimeEntry[] =[];
@@ -55,9 +56,15 @@ TaskUID:string;
     this.getTimeSheets(weekending);
   }
 
+   toggleView()
+   {
+     this.weekview = !this.weekview;
+   }
+
   AddTime(){
     //add one record to timeentries...first check if exists already with status 'N'
-    
+    //todo: update both timesheets and timeentries array
+
     alert(this.ProjectCode + ":" + this.TaskUID);
   }
   selectProject(ProjectCode:string){
@@ -75,6 +82,26 @@ TaskUID:string;
       console.log('DateTimeTimeZone conversion error', JSON.stringify(error));
     }
   }
+
+  saveTimeSheet(ts:TimeSheet) {//idx:number){
+    //alert(idx);
+    //this.timeService.updateTimeSheet(this.timesheets[idx].TimeID,this.timesheets[idx]).subscribe( 
+    this.timesheetService.updateTimeSheet(ts.TimeID,ts).subscribe( 
+        //()=> this.goBack())
+    ()=>alert("Saved!")
+  )
+}
+
+deleteTime(ts:TimeSheet){
+  this.timesheetService.deleteTimeSheet(ts.TimeID).subscribe(()=>{
+    alert("deleted!");
+    var idx = this.timesheets.indexOf(ts);
+    if(idx >0)
+    {
+      this.timesheets.splice(idx,1);
+    }
+  })
+}
 
   goBackward(){
     var weekending = new Date(this.WeekEndingDate);
