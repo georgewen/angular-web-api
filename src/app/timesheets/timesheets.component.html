@@ -6,6 +6,7 @@
 <span *ngIf="weekview==true">  
 <button name="backward" (click)="goBackward()">&lt;&lt;</button><button name="forward" (click)="goForward()">&gt;&gt;</button>
 <div>{{WeekEndingDate | date:'dd/MM/yyyy'}}</div>
+<div>Total Hours: {{weekdayHours[0]}}</div>
 <table class="table">
   <thead>
     <th scope="col">ProjectCode</th>
@@ -30,7 +31,7 @@
         <td><app-timesheet [timesheet]="time.Thu"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Fri"></app-timesheet></td>
         <td><app-timesheet [timesheet]="time.Sat"></app-timesheet></td>
-        <td><app-timesheet [timesheet]="time.Sun"></app-timesheet></td> -->
+        <td><app-timesheet [timesheet]="time.Sun"></app-timesheet></td>  -->
         <td><input id="time.Mon.TimeID" attr.data-projectcode="time.Mon.ProjectCode" attr.data-taskuid="time.Mon.TaskUID"  [(ngModel)]="time.Mon.StandardHours" [disabled] = "time.Mon.StatusCode!='N'" (change)="saveTimeSheet(time.Mon)" size="4" /></td>
         <td><input id="time.Tue.TimeID" attr.data-projectcode="time.Tue.ProjectCode" attr.data-taskuid="time.Tue.TaskUID"  [(ngModel)]="time.Tue.StandardHours" [disabled] = "time.Tue.StatusCode!='N'" (change)="saveTimeSheet(time.Tue)" size="4" /></td>
         <td><input id="time.Wed.TimeID" attr.data-projectcode="time.Wed.ProjectCode" attr.data-taskuid="time.Wed.TaskUID"  [(ngModel)]="time.Wed.StandardHours" [disabled] = "time.Wed.StatusCode!='N'" (change)="saveTimeSheet(time.Wed)" size="4" /></td>
@@ -38,6 +39,20 @@
         <td><input id="time.Fri.TimeID" attr.data-projectcode="time.Fri.ProjectCode" attr.data-taskuid="time.Fri.TaskUID"  [(ngModel)]="time.Fri.StandardHours" [disabled] = "time.Fri.StatusCode!='N'" (change)="saveTimeSheet(time.Fri)" size="4" /></td>
         <td><input id="time.Sat.TimeID" attr.data-projectcode="time.Sat.ProjectCode" attr.data-taskuid="time.Sat.TaskUID"  [(ngModel)]="time.Sat.StandardHours" [disabled] = "time.Sat.StatusCode!='N'" (change)="saveTimeSheet(time.Sat)" size="4" /></td>
         <td><input id="time.Sun.TimeID" attr.data-projectcode="time.Sun.ProjectCode" attr.data-taskuid="time.Sun.TaskUID"  [(ngModel)]="time.Sun.StandardHours" [disabled] = "time.Sun.StatusCode!='N'" (change)="saveTimeSheet(time.Sun)" size="4" /></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{{weekdayHours[1]}}</td>
+        <td>{{weekdayHours[2]}}</td>
+        <td>{{weekdayHours[3]}}</td>
+        <td>{{weekdayHours[4]}}</td>
+        <td>{{weekdayHours[5]}}</td>
+        <td>{{weekdayHours[6]}}</td>
+        <td>{{weekdayHours[7]}}</td>
+
       </tr>
     </tbody>
 </table>
@@ -77,7 +92,7 @@
           (change)="saveTimeSheet(timesheet)" size="4" />        
         </td>
         <td><button id={{timesheet.TimeID}} [hidden] ="timesheet.StatusCode!='N'" (click)="deleteTime(timesheet)">Delete</button></td>
-        <td><button>Detail</button></td>
+        <td><button (click)="openModalWin(timesheet)">Detail</button></td>
       </tr>      
       </tbody>    
   </table>

@@ -1,11 +1,11 @@
 export class TimeSheet{
-    TimeID: number;
+    TimeID?: number;
     ProjectCode: string;
     TaskUID: number; 
-    ActivityCode: string;
+    ActivityCode?: string;
     ResourceID: string;
     TimeEntryDate: string;
     StatusCode: string;
     StandardHours: number;
-    OvertimeHours: number;
+    OvertimeHours?: number;
 }

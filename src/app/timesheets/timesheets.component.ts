@@ -4,7 +4,9 @@ import { TimeSheet } from '../timesheet';
 import { TimeEntry } from '../TimeEntry';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment-timezone';
-import { projection } from '@angular/core/src/render3';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { TimesheetComponent } from '../timesheet/timesheet.component';
+
 
 @Component({
   selector: 'app-timesheets',
@@ -21,6 +23,8 @@ export class TimesheetsComponent implements OnInit {
   //transform timesheet to weekly tabular format
   timeentries:TimeEntry[] =[];
   WeekEndingDate: string;
+  weekdayHours: number[] =[0,0,0,0,0,0,0,0];
+
   //ProjectList = [{ProjectCode:"7060533",ProjectName:"7060533"},{ProjectCode:"7060506",ProjectName:"7060506"}];
   TasksList = //[{"0000123", Tasks:[10,20,30]},{"0000235", Tasks: [1,2,3]}]
   [{
@@ -39,14 +43,17 @@ ProjectCode:string;
 TaskUID:string;
 
   
-  constructor(private timesheetService: TimesheetService,private route: ActivatedRoute) { 
+  constructor(private timesheetService: TimesheetService,
+    private route: ActivatedRoute,
+    public dialog: MatDialog) { 
     //this.timeentries = new Array();
   }
 
   ngOnInit() {
         
     var weekending2 = this.route.snapshot.queryParams["q"];
-    var weekending = "2012-05-27";//'2018-10-28';
+    //var weekending = "2012-05-27";
+    var weekending = '2018-10-28';
 
     if(weekending2){ 
       this.WeekEndingDate = weekending2;
@@ -59,6 +66,26 @@ TaskUID:string;
    toggleView()
    {
      this.weekview = !this.weekview;
+   }
+
+   //detail view in popup window
+   openModalWin(ts:TimeSheet):void
+   {
+    const dialogRef = this.dialog.open(TimesheetComponent, {
+      height: '400px',
+      width: '600px',
+      data: {timesheet: ts} ///here is the most import part:...
+    });
+    //dialogRef.componentInstance.timeId = id;
+
+    dialogRef.afterClosed().subscribe((result) => {
+      //check if changes were made?
+      if(result){
+        console.log(result);
+        this.saveTimeSheet(result);
+      }
+    });
+
    }
 
   AddTime(){
@@ -88,6 +115,8 @@ TaskUID:string;
     if (!ts.TimeID){
       this.timesheetService.addTimeSheet(ts).subscribe((t)=> {
         this.timesheets.push(t);
+        alert(t.TimeID);
+        this.refreshTimeEntries(this.timesheets);
       }
       )      
     } else{
@@ -95,10 +124,10 @@ TaskUID:string;
         //()=> this.goBack())
     ()=> {
       //alert("Saved!");
+      this.refreshTimeEntries(this.timesheets);
     }
   )
   }
-  this.refreshTimeEntries(this.timesheets);
 }
 
 deleteTime(ts:TimeSheet){
@@ -133,10 +162,42 @@ deleteTime(ts:TimeSheet){
 
   refreshTimeEntries(data:TimeSheet[]){
 
+      this.timeentries = [];
+      this.weekdayHours = [0,0,0,0,0,0,0,0];
      //now transform timesheets to timeentries
      data.forEach( (timesheet) =>{
+
       //push to timeentry array.
       var weekday = (new Date(timesheet.TimeEntryDate)).getDay();
+      //subtotal
+      this.weekdayHours[0] += timesheet.StandardHours;
+
+      switch(weekday) {
+        case 1:
+          this.weekdayHours[1] += timesheet.StandardHours;
+          break;
+        case 2:
+          this.weekdayHours[2] += timesheet.StandardHours;
+          break;
+        case 3:
+          this.weekdayHours[3] += timesheet.StandardHours;
+          break;
+        case 4:
+          this.weekdayHours[4] += timesheet.StandardHours;
+          break;
+        case 5:
+          this.weekdayHours[5] += timesheet.StandardHours;
+          break;
+        case 6:
+          this.weekdayHours[6] += timesheet.StandardHours;
+          break;
+        case 0:
+          this.weekdayHours[7] += timesheet.StandardHours;
+          break;
+      }
+
+
+
       //check if projectcode/taskuid already in
       var exists;
       if (this.timeentries.length > 0)
@@ -154,46 +215,14 @@ deleteTime(ts:TimeSheet){
         weekTime.StatusCode = timesheet.StatusCode;
 
         //need to  initialize all weekdays to zero
-        weekTime.Mon = new TimeSheet();
-        weekTime.Mon.ProjectCode = timesheet.ProjectCode;
-        weekTime.Mon.TaskUID = timesheet.TaskUID;
-        weekTime.Mon.StatusCode = "N";
 
-        var tempdate = new Date(this.WeekEndingDate);
-        tempdate.setDate(tempdate.getDate()- 6 );
-        weekTime.Mon.TimeEntryDate = tempdate.toDateString();
-
-        weekTime.Tue = new TimeSheet();
-        weekTime.Tue.ProjectCode = timesheet.ProjectCode;
-        weekTime.Tue.TaskUID = timesheet.TaskUID;
-        weekTime.Tue.StatusCode = "N";
-        var tempdate = new Date(this.WeekEndingDate);
-        tempdate.setDate(tempdate.getDate()- 5 );
-        weekTime.Tue.TimeEntryDate = tempdate.toDateString();
-
-        weekTime.Wed = new TimeSheet();
-        weekTime.Wed.ProjectCode = timesheet.ProjectCode;
-        weekTime.Wed.TaskUID = timesheet.TaskUID;
-        weekTime.Wed.StatusCode = "N";
-        var tempdate = new Date(this.WeekEndingDate);
-        tempdate.setDate(tempdate.getDate()- 4 );
-        weekTime.Wed.TimeEntryDate = tempdate.toDateString();
-
-        weekTime.Thu = new TimeSheet();
-        weekTime.Thu.ProjectCode = timesheet.ProjectCode;
-        weekTime.Thu.TaskUID = timesheet.TaskUID;
-        weekTime.Thu.StatusCode = "N";
-        var tempdate = new Date(this.WeekEndingDate);
-        tempdate.setDate(tempdate.getDate()- 3 );
-        weekTime.Thu.TimeEntryDate = tempdate.toDateString();
-
-        weekTime.Fri = new TimeSheet();
-        weekTime.Fri.ProjectCode = timesheet.ProjectCode;
-        weekTime.Fri.TaskUID = timesheet.TaskUID;
-        weekTime.Fri.StatusCode = "N";
-        var tempdate = new Date(this.WeekEndingDate);
-        tempdate.setDate(tempdate.getDate()- 2 );
-        weekTime.Fri.TimeEntryDate = tempdate.toDateString();
+        weekTime.Mon = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,6), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+        weekTime.Tue = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,5), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+        weekTime.Wed = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,4), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+        weekTime.Thu = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,3), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+        weekTime.Fri = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,2), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+        weekTime.Sat = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,1), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+        weekTime.Sun = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,0), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
 
         switch(weekday) {
           case 1:
@@ -263,7 +292,6 @@ deleteTime(ts:TimeSheet){
         }
         //now update array 
         this.timeentries[index1] = weekTime;
-
       }
   })
   }
@@ -280,15 +308,7 @@ deleteTime(ts:TimeSheet){
     });
   } 
 
-  //to be added
-  // move week backward or forward
 
-  getTimeSheet(id:number){
-    //this.timesheetService.getTimeSheet(id).subscribe
-  }
-  updateTimeSheet(id:number, ts:TimeSheet){}
-  addTimeSheet(ts:TimeSheet){}
-  deleteTimeSheet(id:number){}
   //get , update, add, delete
 
 

@@ -1,6 +1,14 @@
 <div *ngIf="timesheet">
-<input id={{timesheet.TimeID}} attr.data-projectcode={{timesheet.ProjectCode}} attr.data-taskuid={{timesheet.TaskUID}} 
-[(ngModel)]="timesheet.StandardHours" [disabled] = "timesheet.StatusCode!='N'"
-(change)="saveTimeSheet()" size="4" />
-<!-- <button (click) = "saveTimeSheet()">Save</button> -->
+{{TimeID}} <br />
+{{timesheet.ProjectCode}} <br />
+{{timesheet.TaskUID}} <br />
+{{timesheet.StatusCode}} <br />
+<!-- <input [(ngModel)]="timesheet.StandardHours" [disabled] = "timesheet.StatusCode!='N'" (change)="saveTimeSheet()" size="4" /> -->
+<input [(ngModel)]="timesheet.StandardHours" [disabled] = "timesheet.StatusCode!='N'" size="4" />
+<!-- <button (click) = "saveTimeSheet()">Save</button> <br /> -->
+<!-- <button mat-button [mat-dialog-close]="timesheet" cdkFocusInitial>Save</button> -->
+<div mat-dialog-actions>
+    <!-- <button mat-button [mat-dialog-close]=null>Cancel</button> -->
+    <button mat-button [mat-dialog-close]="timesheet" cdkFocusInitial>Close</button>
+  </div>
 </div>

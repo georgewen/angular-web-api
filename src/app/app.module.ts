@@ -20,6 +20,9 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { TimesheetComponent } from './timesheet/timesheet.component';
 import { TimesheetsComponent } from './timesheets/timesheets.component';
 import { TimelistComponent } from './timelist/timelist.component';
+import { MatDialogModule } from '@angular/material';
+//import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Add FontAwesome icons
 library.add(faExternalLinkAlt);
@@ -34,7 +37,7 @@ library.add(faUserCircle);
     CalendarComponent,
     TimesheetComponent,
     TimesheetsComponent,
-    TimelistComponent
+    TimelistComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +49,11 @@ library.add(faUserCircle);
     MsalModule.forRoot({
       clientID: OAuthSettings.appId
     })
+    ,MatDialogModule
+    ,BrowserAnimationsModule //<--copy this.
+  ],
+  entryComponents: [
+    TimesheetComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
