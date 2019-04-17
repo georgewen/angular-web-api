@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { AuthService } from './auth.service';
 import { AlertsService } from './alerts.service';
 import { TimeSheet } from './timesheet';
+import { ProjectTask } from './ProjectTask';
 
 @Injectable({
   providedIn: 'root'
@@ -63,4 +64,10 @@ export class TimesheetService {
       return this.http.delete<TimeSheet>(`https://localhost:44301/api/TimeSheets/${id}`, header);
     }    
 
+    getTasks():Observable<ProjectTask[]> {
+      var header = {headers: new HttpHeaders() 
+        .set('Authorization',  'Bearer ' + this.accessToken)
+      } 
+      return this.http.get<Array<ProjectTask>>(`https://localhost:44301/api/TimeSheets/tasks`,header);
+    }
 }

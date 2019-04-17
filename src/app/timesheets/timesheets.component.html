@@ -58,13 +58,22 @@
 </table>
 
 <br />
-<select [(ngModel)]="ProjectCode" (change)="selectProject($event.target.value)">
-  <option *ngFor='let proj of TasksList' [value]="proj.ProjectCode">{{proj.ProjectCode}}</option>
-</select>
 
-<select [(ngModel)]="TaskUID">
-  <option *ngFor='let task of ProjectTaskList' [value]="task">{{task}}</option>
+<select [(ngModel)]="ProjectCode" (change)="selectProject($event.target.value)">
+  <option *ngFor='let proj of myProjects' [value]="proj.ProjectCode">{{proj.ProjectName}}</option>
 </select>
+<select [(ngModel)]="TaskUID">
+  <option *ngFor='let task of myProjectTasks' [value]="task.TaskUID">{{task.TaskName}}</option>
+</select> 
+
+
+<!-- <select [(ngModel)]="ProjectCode" (change)="selectProject($event.target.value)">
+  <option *ngFor='let proj of TasksList' [value]="proj.ProjectCode">{{proj.ProjectCode}}</option>
+</select> -->
+
+<!-- <select [(ngModel)]="TaskUID">
+  <option *ngFor='let task of ProjectTaskList' [value]="task">{{task}}</option>
+</select> -->
 <!-- <input [(ngModel)]="Hours" size="4"/> -->
 <button [hidden]="TaskUID==null" (click)="AddTime()">Add</button>
 </span>

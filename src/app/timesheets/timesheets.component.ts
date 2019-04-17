@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment-timezone';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { TimesheetComponent } from '../timesheet/timesheet.component';
+import { ProjectTask, MyProjects } from '../ProjectTask';
 
 
 @Component({
@@ -24,6 +25,9 @@ export class TimesheetsComponent implements OnInit {
   timeentries:TimeEntry[] =[];
   WeekEndingDate: string;
   weekdayHours: number[] =[0,0,0,0,0,0,0,0];
+
+  myProjects: MyProjects[];
+  myProjectTasks: ProjectTask[]
 
   //ProjectList = [{ProjectCode:"7060533",ProjectName:"7060533"},{ProjectCode:"7060506",ProjectName:"7060506"}];
   TasksList = //[{"0000123", Tasks:[10,20,30]},{"0000235", Tasks: [1,2,3]}]
@@ -52,8 +56,8 @@ TaskUID:string;
   ngOnInit() {
         
     var weekending2 = this.route.snapshot.queryParams["q"];
-    //var weekending = "2012-05-27";
-    var weekending = '2018-10-28';
+    var weekending = "2012-05-27";
+    //var weekending = '2018-10-28';
 
     if(weekending2){ 
       this.WeekEndingDate = weekending2;
@@ -61,6 +65,7 @@ TaskUID:string;
     }
     this.WeekEndingDate =  weekending;
     this.getTimeSheets(weekending);
+    this.getTasks();
   }
 
    toggleView()
@@ -71,6 +76,7 @@ TaskUID:string;
    //detail view in popup window
    openModalWin(ts:TimeSheet):void
    {
+     this.selectedTime = Object.assign({},ts);
     const dialogRef = this.dialog.open(TimesheetComponent, {
       height: '400px',
       width: '600px',
@@ -80,8 +86,8 @@ TaskUID:string;
 
     dialogRef.afterClosed().subscribe((result) => {
       //check if changes were made?
-      if(result){
-        console.log(result);
+      if(result && result.StandardHours !=this.selectedTime.StandardHours){
+        //console.log(result);
         this.saveTimeSheet(result);
       }
     });
@@ -306,10 +312,15 @@ deleteTime(ts:TimeSheet){
       this.refreshTimeEntries(data);
       //console.log(this.timeentries);
     });
-  } 
-
-
-  //get , update, add, delete
-
-
+  }
+  
+  getTasks(){
+    this.myProjects = [];
+    this.timesheetService.getTasks().subscribe(data =>{
+      this.myProjectTasks = data;
+      data.forEach( (t) =>{
+        if(t.TaskUID==0) {this.myProjects.push({ProjectCode: t.ProjectCode, ProjectName: t.TaskName});}
+      })      
+    });
+  }
 }
