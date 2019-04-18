@@ -7,6 +7,7 @@ import * as moment from 'moment-timezone';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { TimesheetComponent } from '../timesheet/timesheet.component';
 import { ProjectTask, MyProjects } from '../ProjectTask';
+import { stringify } from '@angular/core/src/render3/util';
 
 
 @Component({
@@ -43,8 +44,8 @@ export class TimesheetsComponent implements OnInit {
   ngOnInit() {
         
     var weekending2 = this.route.snapshot.queryParams["q"];
-    //var weekending = "2012-05-27";
-    var weekending = '2018-10-28';
+    var weekending = "2012-05-27";
+    //var weekending = '2018-10-28';
 
     if(weekending2){ 
       this.WeekEndingDate = weekending2;
@@ -97,8 +98,6 @@ export class TimesheetsComponent implements OnInit {
 
   }
   selectProject(ProjectCode:string){
-    //this.ProjectTaskList=[];
-    //var idx = this.TasksList.findIndex((i)=> {return i.ProjectCode == ProjectCode});
     this.ProjectTaskList = this.myProjectTasks.filter( p => p.ProjectCode == ProjectCode && p.TaskUID !=0 );
     this.ProjectCode = ProjectCode;
 
@@ -115,22 +114,17 @@ export class TimesheetsComponent implements OnInit {
 
   saveTimeSheet(ts:TimeSheet) {//idx:number){
     if (!ts.TimeID){
-      this.timesheetService.addTimeSheet(ts).subscribe((t)=> {
+      this.timesheetService.addTimeSheet(ts).subscribe((t)=> {        
         this.timesheets.push(t);
-        alert(t.TimeID);
         this.refreshTimeEntries(this.timesheets);
       }
       )      
-    } else{
+    } else{ //existing timesheet
       //if hours = 0 then delete
-
-      this.timesheetService.updateTimeSheet(ts.TimeID,ts).subscribe( 
-        //()=> this.goBack())
-    ()=> {
-      //replace this.timesheets
-      var idx  = this.timesheets.findIndex( t => t.TimeID == ts.TimeID);
-      this.timesheets[idx] = ts;
-      this.refreshTimeEntries(this.timesheets);
+      this.timesheetService.updateTimeSheet(ts.TimeID,ts).subscribe(()=> { //this.goBack())
+        var idx  = this.timesheets.findIndex( t => t.TimeID == ts.TimeID);
+        this.timesheets[idx] = ts;
+        this.refreshTimeEntries(this.timesheets);
     }
   )
   }
@@ -142,7 +136,6 @@ deleteTime(ts:TimeSheet){
     alert("deleted!");
 
     var idx = this.timesheets.findIndex((t) => {return (t.TimeID==ts.TimeID)}); //this.timesheets.indexOf(ts);
-
     if(idx >0)  {this.timesheets.splice(idx,1);}
     //delete doesn't work...
     this.refreshTimeEntries(this.timesheets);
@@ -171,45 +164,24 @@ deleteTime(ts:TimeSheet){
       this.timeentries = [];
       this.weekdayHours = [0,0,0,0,0,0,0,0];
      //now transform timesheets to timeentries
-     data.forEach( (timesheet) =>{
+     data.forEach( (timesheet, index) =>{
 
       //push to timeentry array.
       var weekday = (new Date(timesheet.TimeEntryDate)).getDay();
       //subtotal
       this.weekdayHours[0] += timesheet.StandardHours;
 
-      switch(weekday) {
-        case 1:
-          this.weekdayHours[1] += timesheet.StandardHours;
-          break;
-        case 2:
-          this.weekdayHours[2] += timesheet.StandardHours;
-          break;
-        case 3:
-          this.weekdayHours[3] += timesheet.StandardHours;
-          break;
-        case 4:
-          this.weekdayHours[4] += timesheet.StandardHours;
-          break;
-        case 5:
-          this.weekdayHours[5] += timesheet.StandardHours;
-          break;
-        case 6:
-          this.weekdayHours[6] += timesheet.StandardHours;
-          break;
-        case 0:
-          this.weekdayHours[7] += timesheet.StandardHours;
-          break;
+      if(weekday==0){
+        this.weekdayHours[7] += timesheet.StandardHours;
+      } else {
+        this.weekdayHours[weekday] += timesheet.StandardHours;
       }
-
-
-
+    
       //check if projectcode/taskuid already in
       var exists;
       if (this.timeentries.length > 0)
       {
           exists = this.timeentries.filter(t=> t.ProjectCode==timesheet.ProjectCode && t.TaskUID == timesheet.TaskUID && t.StatusCode == timesheet.StatusCode);                     
-          //console.log(this.timeentries.length);
         }          
 
       if(!exists || exists.length==0)
@@ -229,6 +201,17 @@ deleteTime(ts:TimeSheet){
         weekTime.Fri = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,2), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
         weekTime.Sat = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,1), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
         weekTime.Sun = { ProjectCode: timesheet.ProjectCode,TaskUID: timesheet.TaskUID, StatusCode: "N", ResourceID: timesheet.ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,0), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+
+        // let weekdays = new Map<Number,string>();
+        // weekdays.set(0,"Sun");
+        // weekdays.set(1,"Mon");
+        // weekdays.set(2,"Tue");
+        // weekdays.set(3,"Wed");
+        // weekdays.set(4,"Thu");
+        // weekdays.set(5,"Fri");
+        // weekdays.set(6,"Sat");
+        // console.log(weekdays[weekday]);
+        //weekTime[weekdays[weekday]] = timesheet; //this is not working, need to consider dict type
 
         switch(weekday) {
           case 1:

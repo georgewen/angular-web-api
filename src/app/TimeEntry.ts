@@ -5,6 +5,7 @@ export class TimeEntry{
     TaskUID: number; 
     ActivityCode: string;
     StatusCode: string;
+    //how about use Dict: Map<string,TimeSheet>() 
     Mon: TimeSheet;
     Tue: TimeSheet;
     Wed: TimeSheet;
