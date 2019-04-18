@@ -19,7 +19,7 @@ export class TimesheetsComponent implements OnInit {
 
   timesheets: TimeSheet[];
   addingmode = false;
-  weekview = false;
+  weekview = true;
   selectedTime: TimeSheet;
   //transform timesheet to weekly tabular format
   timeentries:TimeEntry[] =[];
@@ -29,22 +29,9 @@ export class TimesheetsComponent implements OnInit {
   myProjects: MyProjects[];
   myProjectTasks: ProjectTask[]
 
-  //ProjectList = [{ProjectCode:"7060533",ProjectName:"7060533"},{ProjectCode:"7060506",ProjectName:"7060506"}];
-  TasksList = //[{"0000123", Tasks:[10,20,30]},{"0000235", Tasks: [1,2,3]}]
-  [{
-    ProjectCode: "7060533",
-    Tasks: ['Miami', 'Ft.Lauderdale', 'Tampa']
-  }, {
-    ProjectCode: "7060506",
-    Tasks: ['San Diego', 'San Francisco', 'L.A.']
-  }, {
-    ProjectCode: "0000235",
-    Tasks: ['Dallas', 'San Antonio', 'Anywhere USA']
-  }
-];
-ProjectTaskList: string[];
-ProjectCode:string;
-TaskUID:string;
+  ProjectTaskList: any; 
+  ProjectCode:string;
+  TaskUID:number;
 
   
   constructor(private timesheetService: TimesheetService,
@@ -56,8 +43,8 @@ TaskUID:string;
   ngOnInit() {
         
     var weekending2 = this.route.snapshot.queryParams["q"];
-    var weekending = "2012-05-27";
-    //var weekending = '2018-10-28';
+    //var weekending = "2012-05-27";
+    var weekending = '2018-10-28';
 
     if(weekending2){ 
       this.WeekEndingDate = weekending2;
@@ -97,15 +84,24 @@ TaskUID:string;
   AddTime(){
     //add one record to timeentries...first check if exists already with status 'N'
     //todo: update both timesheets and timeentries array
-
     alert(this.ProjectCode + ":" + this.TaskUID);
+    if(this.timesheets.filter( t => t.ProjectCode == this.ProjectCode && t.TaskUID == this.TaskUID && t.StatusCode =="N").length <= 0)
+    {
+      var ts = { ProjectCode: this.ProjectCode,TaskUID: this.TaskUID, StatusCode: "N", ResourceID: this.timesheets[0].ResourceID, TimeEntryDate: this.subtractDateTime(this.WeekEndingDate,6), ActivityCode: "TECHNICAL", StandardHours:0, OvertimeHours: 0 };
+      this.timesheets.push(ts);
+      this.refreshTimeEntries(this.timesheets);
+    }
+
+    this.ProjectCode = "";
+    this.TaskUID = null;
 
   }
   selectProject(ProjectCode:string){
-    this.ProjectTaskList=[];
-    var idx = this.TasksList.findIndex((i)=> {return i.ProjectCode == ProjectCode});
-    this.ProjectTaskList = this.TasksList[idx].Tasks;
-    //this.ProjectCode = ProjectCode;
+    //this.ProjectTaskList=[];
+    //var idx = this.TasksList.findIndex((i)=> {return i.ProjectCode == ProjectCode});
+    this.ProjectTaskList = this.myProjectTasks.filter( p => p.ProjectCode == ProjectCode && p.TaskUID !=0 );
+    this.ProjectCode = ProjectCode;
+
   }
   subtractDateTime(dateTime: string, days:number): string {
     try {
@@ -126,10 +122,14 @@ TaskUID:string;
       }
       )      
     } else{
-    this.timesheetService.updateTimeSheet(ts.TimeID,ts).subscribe( 
+      //if hours = 0 then delete
+
+      this.timesheetService.updateTimeSheet(ts.TimeID,ts).subscribe( 
         //()=> this.goBack())
     ()=> {
-      //alert("Saved!");
+      //replace this.timesheets
+      var idx  = this.timesheets.findIndex( t => t.TimeID == ts.TimeID);
+      this.timesheets[idx] = ts;
       this.refreshTimeEntries(this.timesheets);
     }
   )

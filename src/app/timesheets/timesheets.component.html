@@ -4,9 +4,18 @@
 <button (click)="toggleView()">{{weekview?"Detail View":"Week View"}}</button>
 
 <span *ngIf="weekview==true">  
+
 <button name="backward" (click)="goBackward()">&lt;&lt;</button><button name="forward" (click)="goForward()">&gt;&gt;</button>
-<div>{{WeekEndingDate | date:'dd/MM/yyyy'}}</div>
-<div>Total Hours: {{weekdayHours[0]}}</div>
+<div>Week Ending: {{WeekEndingDate | date:'mediumDate'}} / Total Hours: {{weekdayHours[0]  | number : '1.2-2' }}</div>
+
+<select [(ngModel)]="ProjectCode" (change)="selectProject($event.target.value)">
+    <option *ngFor='let proj of myProjects' [value]="proj.ProjectCode">{{ "(" + proj.ProjectCode + ")." + proj.ProjectName}}</option>
+  </select>
+  <select [(ngModel)]="TaskUID">
+    <option *ngFor='let task of ProjectTaskList' [value]="task.TaskUID">{{ "[" +  task.TaskUID + "]." + task.TaskName}}</option>
+  </select> 
+  <button [hidden]="TaskUID==null" (click)="AddTime()">Add</button>
+  
 <table class="table">
   <thead>
     <th scope="col">ProjectCode</th>
@@ -45,37 +54,18 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>{{weekdayHours[1]}}</td>
-        <td>{{weekdayHours[2]}}</td>
-        <td>{{weekdayHours[3]}}</td>
-        <td>{{weekdayHours[4]}}</td>
-        <td>{{weekdayHours[5]}}</td>
-        <td>{{weekdayHours[6]}}</td>
-        <td>{{weekdayHours[7]}}</td>
+        <td>{{weekdayHours[1] | number : '1.2-2' }}</td>
+        <td>{{weekdayHours[2] | number : '1.2-2' }}</td>
+        <td>{{weekdayHours[3] | number : '1.2-2' }}</td>
+        <td>{{weekdayHours[4] | number : '1.2-2' }}</td>
+        <td>{{weekdayHours[5] | number : '1.2-2' }}</td>
+        <td>{{weekdayHours[6] | number : '1.2-2' }}</td>
+        <td>{{weekdayHours[7] | number : '1.2-2' }}</td>
 
       </tr>
     </tbody>
 </table>
 
-<br />
-
-<select [(ngModel)]="ProjectCode" (change)="selectProject($event.target.value)">
-  <option *ngFor='let proj of myProjects' [value]="proj.ProjectCode">{{proj.ProjectName}}</option>
-</select>
-<select [(ngModel)]="TaskUID">
-  <option *ngFor='let task of myProjectTasks' [value]="task.TaskUID">{{task.TaskName}}</option>
-</select> 
-
-
-<!-- <select [(ngModel)]="ProjectCode" (change)="selectProject($event.target.value)">
-  <option *ngFor='let proj of TasksList' [value]="proj.ProjectCode">{{proj.ProjectCode}}</option>
-</select> -->
-
-<!-- <select [(ngModel)]="TaskUID">
-  <option *ngFor='let task of ProjectTaskList' [value]="task">{{task}}</option>
-</select> -->
-<!-- <input [(ngModel)]="Hours" size="4"/> -->
-<button [hidden]="TaskUID==null" (click)="AddTime()">Add</button>
 </span>
 
 <span id="detailview" *ngIf="weekview==false">
